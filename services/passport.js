@@ -17,22 +17,26 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
-  new GoogleStrategy({
-    clientID: keys.googleClientID,
-    clientSecret: keys.googleClientSecret,
-    callbackURL: '/auth/google/callback'
-  }, (accessToken, refreshToken, profile, done) => {
-    User.findOne({ googleId: profile.id })
-      .then((existingUser) => {
-        if(existingUser) {
-          done(null, existingUser);     //first arg is error and second is user
-        } else {
-          new User({ googleId: profile.id })
-            .save()
-            .then(user => done(null, user));
-        }
-      })
-  })
+  new GoogleStrategy(
+    {
+      clientID: keys.googleClientID,
+      clientSecret: keys.googleClientSecret,
+      callbackURL: '/auth/google/callback',
+      proxy: true,
+    },
+    (accessToken, refreshToken, profile, done) => {
+      User.findOne({ googleId: profile.id })
+        .then((existingUser) => {
+          if(existingUser) {
+            done(null, existingUser);     //first arg is error and second is user
+          } else {
+            new User({ googleId: profile.id })
+              .save()
+              .then(user => done(null, user));
+          }
+        })
+    }
+  )
 );
 
 /* the call back function here in the passport.use(strategy, *callback*) is the function that gets called
