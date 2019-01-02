@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 require('./models/User');
@@ -16,6 +17,8 @@ mongoose
 
 const app = express();
 
+//body parser middleware to parse incoming request and assign it to req.body of incoming request
+app.use(bodyParser.json());
 // cookie session middleware (to process incoming req before sending them to route handlers)
 app.use(
   cookieSession({
@@ -28,6 +31,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 const PORT = process.env.PORT || 5000;        // Dynamic PORT binding
 app.listen(PORT);
