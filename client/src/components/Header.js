@@ -34,9 +34,7 @@ class Header extends React.Component {
             Email Survey
           </Link>
           <ul className="right">
-            <li>
-              {this.renderContent()}
-            </li>
+            {this.renderContent()}
           </ul>
         </div>
       </nav>
